@@ -5,7 +5,7 @@
             <x-btn-link class="ml-4 float-right" href="{{ route('tenants.create') }}">Add Tenant</x-btn-link>
         </h2>
     
-    </x-slot>
+    </x-slot>   
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
