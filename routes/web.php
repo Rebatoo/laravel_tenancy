@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 

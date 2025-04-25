@@ -24,21 +24,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($tenants as $tenant)
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td class="py-3 px-6">{{ $tenant->name }}</td>
-                <td class="py-3 px-6">{{ $tenant->email }}</td> 
-                <td class="py-3 px-6">
-                    @foreach ($tenant->domains as $domain)
-                    {{ $domain->domain }}{{ $loop->last ? '' : ', ' }}
-                    @endforeach
-                </td>
-                <td class="py-3 px-6">
-                    <button class="text-green-600 hover:underline mr-4">Accept</button>
-                    <button class="text-red-600 hover:underline">Delete</button>
-                </td>
-            </tr>
-            @endforeach
+
         </tbody>
     </table>
 </div>
