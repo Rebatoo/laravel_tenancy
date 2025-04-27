@@ -11,9 +11,13 @@ class TenantHomeController extends Controller
     {
         // Get the admin user (the first user created in the tenant's database)
         $admin = User::where('is_admin', true)->first();
+        
+        // Get all users
+        $users = User::all();
 
         return view('tenant.home', [
-            'admin' => $admin
+            'admin' => $admin,
+            'users' => $users
         ]);
     }
 }
