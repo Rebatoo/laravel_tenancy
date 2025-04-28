@@ -8,6 +8,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Http\Controllers\TenantHomeController;
 use App\Http\Controllers\TenantAuthController;
 use App\Http\Controllers\TenantWorkerController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,19 @@ Route::middleware([
         Route::get('/workers', [TenantWorkerController::class, 'index'])->name('tenant.workers.index');
         Route::get('/workers/create', [TenantWorkerController::class, 'create'])->name('tenant.workers.create');
         Route::post('/workers', [TenantWorkerController::class, 'store'])->name('tenant.workers.store');
+    });
+
+    // Customer Management Routes (accessible by both auth and worker)
+    Route::middleware(['auth:worker,web'])->group(function () {
+        Route::resource('customers', CustomerController::class)->names([
+            'index' => 'tenant.customers.index',
+            'create' => 'tenant.customers.create',
+            'store' => 'tenant.customers.store',
+            'show' => 'tenant.customers.show',
+            'edit' => 'tenant.customers.edit',
+            'update' => 'tenant.customers.update',
+            'destroy' => 'tenant.customers.destroy',
+        ]);
     });
 
     // Worker Dashboard Route (protected by worker guard)
