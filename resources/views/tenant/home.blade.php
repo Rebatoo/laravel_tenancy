@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenant Homepage</title>
+    <title>Tenant Homepage - {{ tenant('name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
-            <h1 class="text-2xl font-bold text-center mb-6">Welcome to {{ tenant('name') }}</h1>
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Welcome to {{ tenant('name') }}</h1>
+                <form method="POST" action="{{ route('tenant-logout') }}">
+                    @csrf
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+                        Logout
+                    </button>
+                </form>
+            </div>
             
             <div class="space-y-4">
                 <div class="bg-gray-50 p-4 rounded-lg">
