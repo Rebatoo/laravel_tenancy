@@ -59,7 +59,7 @@
             </div>
 
             <!-- Customer Management -->
-            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Customer Management</h3>
@@ -73,6 +73,26 @@
                         <a href="{{ route('tenant.customers.index') }}" 
                            class="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors">
                             View All Customers →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Laundry Logs -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Laundry Logs</h3>
+                        <a href="{{ route('tenant.laundry_logs.create') }}" 
+                           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                            Add New Laundry Log
+                        </a>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-gray-600">Track and manage laundry services.</p>
+                        <a href="{{ route('tenant.laundry_logs.index') }}" 
+                           class="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors">
+                            View All Laundry Logs →
                         </a>
                     </div>
                 </div>

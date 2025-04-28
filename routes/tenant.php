@@ -9,6 +9,7 @@ use App\Http\Controllers\TenantHomeController;
 use App\Http\Controllers\TenantAuthController;
 use App\Http\Controllers\TenantWorkerController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\LaundryLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,17 @@ Route::middleware([
             'edit' => 'tenant.customers.edit',
             'update' => 'tenant.customers.update',
             'destroy' => 'tenant.customers.destroy',
+        ]);
+
+        // Laundry Log Routes
+        Route::resource('laundry-logs', LaundryLogController::class)->names([
+            'index' => 'tenant.laundry_logs.index',
+            'create' => 'tenant.laundry_logs.create',
+            'store' => 'tenant.laundry_logs.store',
+            'show' => 'tenant.laundry_logs.show',
+            'edit' => 'tenant.laundry_logs.edit',
+            'update' => 'tenant.laundry_logs.update',
+            'destroy' => 'tenant.laundry_logs.destroy',
         ]);
     });
 
