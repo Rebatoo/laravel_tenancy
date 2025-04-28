@@ -20,6 +20,8 @@
                 <th scope="col" class="py-3 px-6">Name</th>
                 <th scope="col" class="py-3 px-6">Email</th>
                 <th scope="col" class="py-3 px-6">Domain</th>
+                <th scope="col" class="py-3 px-6">Plan</th>
+                <th scope="col" class="py-3 px-6">Status</th>
                 <th scope="col" class="py-3 px-6">Action</th>
             </tr>
         </thead>
@@ -32,6 +34,26 @@
                     @foreach ($tenant->domains as $domain)
                     {{ $domain->domain }}{{ $loop->last ? '' : ', ' }}
                     @endforeach
+                </td>
+                <td class="py-3 px-6">
+                    <form action="{{ route('tenants.updatePlan', $tenant->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <select name="is_premium" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="0" {{ !$tenant->is_premium ? 'selected' : '' }}>Basic</option>
+                            <option value="1" {{ $tenant->is_premium ? 'selected' : '' }}>Premium</option>
+                        </select>
+                    </form>
+                </td>
+                <td class="py-3 px-6">
+                    <form action="{{ route('tenants.updateStatus', $tenant->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <select name="is_active" onchange="this.form.submit()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="1" {{ $tenant->is_active ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ !$tenant->is_active ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </form>
                 </td>
                 <td class="py-3 px-6">
                     <button class="text-green-600 hover:underline mr-4">Accept</button>

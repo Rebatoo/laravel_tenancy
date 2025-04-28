@@ -17,11 +17,43 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'id',
             'name',
             'email',
-            'password'
+            'password',
+            'is_premium',
+            'is_active'
         ];
     }
     public function setPasswordAttribute($value)
     {
        return $this->attributes['password'] =  bcrypt($value);
+    }
+
+    public function isPremium(): bool
+    {
+        return $this->is_premium;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->is_active;
+    }
+
+    public function activate(): void
+    {
+        $this->update(['is_active' => true]);
+    }
+
+    public function deactivate(): void
+    {
+        $this->update(['is_active' => false]);
+    }
+
+    public function upgradeToPremium(): void
+    {
+        $this->update(['is_premium' => true]);
+    }
+
+    public function downgradeToBasic(): void
+    {
+        $this->update(['is_premium' => false]);
     }
 }

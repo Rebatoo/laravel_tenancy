@@ -104,4 +104,30 @@ class TenantController extends Controller
     {
         //
     }
+
+    /**
+     * Update the plan (is_premium) for the specified tenant.
+     */
+    public function updatePlan(Request $request, Tenant $tenant)
+    {
+        $validated = $request->validate([
+            'is_premium' => 'required|boolean',
+        ]);
+        $tenant->is_premium = $validated['is_premium'];
+        $tenant->save();
+        return redirect()->route('tenants.index')->with('success', 'Tenant plan updated successfully.');
+    }
+
+    /**
+     * Update the status (is_active) for the specified tenant.
+     */
+    public function updateStatus(Request $request, Tenant $tenant)
+    {
+        $validated = $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+        $tenant->is_active = $validated['is_active'];
+        $tenant->save();
+        return redirect()->route('tenants.index')->with('success', 'Tenant status updated successfully.');
+    }
 }
