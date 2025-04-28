@@ -40,4 +40,9 @@ Route::middleware([
         Route::get('/workers/create', [TenantWorkerController::class, 'create'])->name('tenant.workers.create');
         Route::post('/workers', [TenantWorkerController::class, 'store'])->name('tenant.workers.store');
     });
+
+    // Worker Dashboard Route (protected by worker guard)
+    Route::middleware(['auth:worker'])->group(function () {
+        Route::get('/worker/dashboard', [TenantAuthController::class, 'workerDashboard'])->name('tenant.workers.dashboard');
+    });
 });

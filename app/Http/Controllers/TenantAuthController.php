@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Models\User;
+use App\Models\Worker;
+use Illuminate\Support\Facades\Hash;
 
 class TenantAuthController extends Controller
 {
@@ -20,21 +22,44 @@ class TenantAuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        // Check if email exists in users table
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            Auth::login($user, $request->filled('remember'));
             return redirect()->intended(route('tenant.home'));
         }
 
-        throw ValidationException::withMessages([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        // If not found in users, check workers table
+        $worker = Worker::where('email', $credentials['email'])->first();
+
+        if ($worker && Hash::check($credentials['password'], $worker->password)) {
+            Auth::guard('worker')->login($worker, $request->filled('remember'));
+            return redirect()->intended(route('tenant.workers.dashboard'));
+        }
+
+        // If neither found, return with error
+        return back()
+            ->withInput($request->only('email'))
+            ->withErrors(['email' => 'These credentials do not match our records.']);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        if (Auth::guard('worker')->check()) {
+            Auth::guard('worker')->logout();
+        } else {
+            Auth::logout();
+        }
+        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('tenant-login');
+    }
+
+    public function workerDashboard()
+    {
+        $worker = Auth::guard('worker')->user();
+        return view('tenant.workers.dashboard', compact('worker'));
     }
 } 
