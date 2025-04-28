@@ -7,6 +7,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Http\Controllers\TenantHomeController;
 use App\Http\Controllers\TenantAuthController;
+use App\Http\Controllers\TenantWorkerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,5 +34,10 @@ Route::middleware([
     // Protected Routes
     Route::middleware(['auth'])->group(function () {
         Route::get('/', [TenantHomeController::class, 'index'])->name('tenant.home');
+        
+        // Worker Management Routes
+        Route::get('/workers', [TenantWorkerController::class, 'index'])->name('tenant.workers.index');
+        Route::get('/workers/create', [TenantWorkerController::class, 'create'])->name('tenant.workers.create');
+        Route::post('/workers', [TenantWorkerController::class, 'store'])->name('tenant.workers.store');
     });
 });

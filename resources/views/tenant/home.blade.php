@@ -76,6 +76,13 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-2">Workers Management</h2>
+                    <a href="{{ route('tenant.workers.index') }}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors">
+                        Manage Workers
+                    </a>
+                </div>
             </div>
         </div>
     </div>
