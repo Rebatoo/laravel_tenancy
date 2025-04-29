@@ -29,6 +29,16 @@
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h2 class="text-lg font-semibold mb-2">Tenant Information</h2>
                     <p class="text-gray-600"><span class="font-medium">Domain:</span> {{ request()->getHost() }}</p>
+                    <p class="text-gray-600"><span class="font-medium">Plan:</span> 
+                        <span class="px-2 py-1 rounded {{ tenant('is_premium') ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800' }}">
+                            {{ tenant('is_premium') ? 'Premium' : 'Basic' }}
+                        </span>
+                    </p>
+                    <p class="text-gray-600"><span class="font-medium">Status:</span> 
+                        <span class="px-2 py-1 rounded {{ tenant('is_active') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            {{ tenant('is_active') ? 'Active' : 'Inactive' }}
+                        </span>
+                    </p>
                     <p class="text-gray-600"><span class="font-medium">Created:</span> {{ $admin->created_at->format('F j, Y') }}</p>
                 </div>
 
