@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TenantRegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,6 +11,10 @@ Route::get('/', function () {
 Route::get('/homepage', function () {
     return view('homepage');
 })->name('homepage');
+
+// Tenant Registration Routes
+Route::get('/tenantregister', [TenantRegistrationController::class, 'showRegistrationForm'])->name('tenant.register.form');
+Route::post('/tenantregister', [TenantRegistrationController::class, 'register'])->name('tenant.register');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
