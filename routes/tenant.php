@@ -10,6 +10,7 @@ use App\Http\Controllers\TenantAuthController;
 use App\Http\Controllers\TenantWorkerController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LaundryLogController;
+use App\Http\Controllers\TenantAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,11 @@ Route::middleware([
     // Protected Routes
     Route::middleware(['auth'])->group(function () {
         Route::get('/', [TenantHomeController::class, 'index'])->name('tenant.home');
+        
+        // Admin Management Routes
+        Route::get('/admins', [TenantAdminController::class, 'index'])->name('tenant.admins.index');
+        Route::get('/admins/create', [TenantAdminController::class, 'create'])->name('tenant.admins.create');
+        Route::post('/admins', [TenantAdminController::class, 'store'])->name('tenant.admins.store');
         
         // Worker Management Routes
         Route::get('/workers', [TenantWorkerController::class, 'index'])->name('tenant.workers.index');
