@@ -11,6 +11,16 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
     
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'is_active',
+        'is_premium',
+        'verification_status',
+        'temp_domain'
+    ];
+
     public static function getCustomColumns(): array
     {
         return [
@@ -18,8 +28,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'name',
             'email',
             'password',
+            'is_active',
             'is_premium',
-            'is_active'
+            'verification_status',
+            'temp_domain',
+            'created_at',
+            'updated_at',
         ];
     }
     public function setPasswordAttribute($value)

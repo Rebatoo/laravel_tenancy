@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('tenants', TenantController::class);
     Route::patch('/tenants/{tenant}/update-plan', [TenantController::class, 'updatePlan'])->name('tenants.updatePlan');
     Route::patch('/tenants/{tenant}/update-status', [TenantController::class, 'updateStatus'])->name('tenants.updateStatus');
+    Route::patch('/tenants/{tenant}/verify', [TenantController::class, 'verifyTenant'])->name('tenants.verify');
 });
 
 require __DIR__.'/auth.php';
