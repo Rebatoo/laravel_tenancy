@@ -29,14 +29,22 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    // Authentication Routes
+    // Tenant Authentication Routes (completely separate from central app)
     Route::get('/tenant-login', [TenantAuthController::class, 'showLoginForm'])->name('tenant-login');
     Route::post('/tenant-login', [TenantAuthController::class, 'login']);
     Route::post('/tenant-logout', [TenantAuthController::class, 'logout'])->name('tenant-logout');
 
+    // Guest homepage for tenant domain
+    Route::get('/', function () {
+        if (auth()->check()) {
+            return redirect()->route('tenant.home');
+        }
+        return view('tenant.auth.login');
+    });
+
     // Protected Routes
     Route::middleware(['auth'])->group(function () {
-        Route::get('/', [TenantHomeController::class, 'index'])->name('tenant.home');
+        Route::get('/home', [TenantHomeController::class, 'index'])->name('tenant.home');
         
         // Admin Management Routes
         Route::get('/admins', [TenantAdminController::class, 'index'])->name('tenant.admins.index');
