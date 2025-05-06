@@ -2,6 +2,7 @@
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantRegistrationController;
+use App\Http\Controllers\AuthorizedAdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,6 +30,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/tenants/{tenant}/update-plan', [TenantController::class, 'updatePlan'])->name('tenants.updatePlan');
     Route::patch('/tenants/{tenant}/update-status', [TenantController::class, 'updateStatus'])->name('tenants.updateStatus');
     Route::patch('/tenants/{tenant}/verify', [TenantController::class, 'verifyTenant'])->name('tenants.verify');
+});
+
+// Authorized Admin Management Routes
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/authorized-admins', [AuthorizedAdminController::class, 'index'])->name('authorized-admins.index');
+    Route::get('/authorized-admins/create', [AuthorizedAdminController::class, 'create'])->name('authorized-admins.create');
+    Route::post('/authorized-admins', [AuthorizedAdminController::class, 'store'])->name('authorized-admins.store');
+    Route::delete('/authorized-admins/{authorizedAdmin}', [AuthorizedAdminController::class, 'destroy'])->name('authorized-admins.destroy');
+    Route::patch('/authorized-admins/{authorizedAdmin}/toggle-status', [AuthorizedAdminController::class, 'toggleStatus'])->name('authorized-admins.toggle-status');
 });
 
 require __DIR__.'/auth.php';

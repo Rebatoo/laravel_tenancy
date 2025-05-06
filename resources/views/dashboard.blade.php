@@ -2,6 +2,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Dashboard') }}
+            <x-btn-link class="ml-4 float-right" href="{{ route('authorized-admins.index') }}">Authorized Admins</x-btn-link>
             <x-btn-link class="ml-4 float-right" href="{{ route('tenants.index') }}">Tenants</x-btn-link>
         </h2>
     </x-slot>

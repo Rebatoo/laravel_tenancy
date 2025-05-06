@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\AuthorizedAdmin;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,16 @@ class GoogleController extends Controller
                     ->with('error', 'No email provided by Google. Please try again or use a different login method.');
             }
 
+            // Check if the email is authorized
+            $authorizedAdmin = AuthorizedAdmin::where('email', $googleUser->email)
+                ->where('is_active', true)
+                ->first();
+
+            if (!$authorizedAdmin) {
+                return redirect()->route('login')
+                    ->with('error', 'This email is not authorized to access the admin panel. Please contact an administrator.');
+            }
+
             // Check if user exists
             $user = User::where('email', $googleUser->email)->first();
             
@@ -51,6 +62,7 @@ class GoogleController extends Controller
                     'password' => Hash::make(Str::random(24)),
                     'google_id' => $googleUser->id,
                     'email_verified_at' => now(), // Google emails are verified
+                    'is_admin' => true, // Set as admin since they're authorized
                 ]);
 
                 event(new Registered($user));
@@ -64,6 +76,12 @@ class GoogleController extends Controller
                 // Update email verification status if not verified
                 if (!$user->email_verified_at) {
                     $user->email_verified_at = now();
+                    $user->save();
+                }
+
+                // Ensure user is set as admin
+                if (!$user->is_admin) {
+                    $user->is_admin = true;
                     $user->save();
                 }
             }

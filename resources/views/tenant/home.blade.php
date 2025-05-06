@@ -100,6 +100,13 @@
                         Manage Workers
                     </a>
                 </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-2">Authorized Admin Management</h2>
+                    <a href="{{ route('authorized-admins.index') }}" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
+                        Manage Authorized Admins
+                    </a>
+                </div>
             </div>
         </div>
     </div>
