@@ -107,6 +107,22 @@
                         Manage Authorized Admins
                     </a>
                 </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-2">Laundry Analytics</h2>
+                    @if(tenant('is_premium'))
+                        <a href="{{ route('tenant.analytics') }}" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors">
+                            View Analytics
+                        </a>
+                    @else
+                        <div class="flex items-center space-x-2">
+                            <button disabled class="bg-gray-300 text-gray-500 px-4 py-2 rounded cursor-not-allowed">
+                                View Analytics
+                            </button>
+                            <span class="text-sm text-gray-500">(Premium Feature)</span>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

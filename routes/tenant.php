@@ -11,6 +11,7 @@ use App\Http\Controllers\TenantWorkerController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LaundryLogController;
 use App\Http\Controllers\TenantAdminController;
+use App\Http\Controllers\AnalyticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,9 @@ Route::middleware([
         Route::get('/workers', [TenantWorkerController::class, 'index'])->name('tenant.workers.index');
         Route::get('/workers/create', [TenantWorkerController::class, 'create'])->name('tenant.workers.create');
         Route::post('/workers', [TenantWorkerController::class, 'store'])->name('tenant.workers.store');
+
+        // Analytics Route (Premium Feature)
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('tenant.analytics');
     });
 
     // Customer Management Routes (accessible by both auth and worker)
