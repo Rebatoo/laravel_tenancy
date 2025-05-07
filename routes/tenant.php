@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LaundryLogController;
 use App\Http\Controllers\TenantAdminController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\PremiumRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,11 @@ Route::middleware([
 
         // Analytics Route (Premium Feature)
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('tenant.analytics');
+
+        // Premium Request Routes
+        Route::get('/premium-request', [PremiumRequestController::class, 'create'])->name('tenant.premium-request.create');
+        Route::post('/premium-request', [PremiumRequestController::class, 'store'])->name('tenant.premium-request.store');
+        Route::get('/premium-request/status', [PremiumRequestController::class, 'status'])->name('tenant.premium-request.status');
     });
 
     // Customer Management Routes (accessible by both auth and worker)

@@ -40,6 +40,17 @@
                         </span>
                     </p>
                     <p class="text-gray-600"><span class="font-medium">Created:</span> {{ $admin->created_at->format('F j, Y') }}</p>
+                    
+                    @if(!tenant('is_premium'))
+                        <div class="mt-4">
+                            <a href="{{ route('tenant.premium-request.create') }}" class="inline-block bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
+                                Request Premium Access
+                            </a>
+                            <a href="{{ route('tenant.premium-request.status') }}" class="inline-block ml-2 text-purple-600 hover:text-purple-700">
+                                Check Request Status
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-lg">
@@ -107,7 +118,7 @@
                         Manage Authorized Admins
                     </a>
                 </div>
-
+    
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h2 class="text-lg font-semibold mb-2">Laundry Analytics</h2>
                     @if(tenant('is_premium'))
