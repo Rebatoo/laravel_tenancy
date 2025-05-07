@@ -13,6 +13,7 @@ use App\Http\Controllers\LaundryLogController;
 use App\Http\Controllers\TenantAdminController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\PremiumRequestController;
+use App\Http\Controllers\TenantCustomizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,10 @@ Route::middleware([
     // Protected Routes
     Route::middleware(['auth'])->group(function () {
         Route::get('/home', [TenantHomeController::class, 'index'])->name('tenant.home');
+        
+        // Customization Routes
+        Route::get('/customization', [TenantCustomizationController::class, 'edit'])->name('tenant.customization.edit');
+        Route::put('/customization', [TenantCustomizationController::class, 'update'])->name('tenant.customization.update');
         
         // Admin Management Routes
         Route::get('/admins', [TenantAdminController::class, 'index'])->name('tenant.admins.index');

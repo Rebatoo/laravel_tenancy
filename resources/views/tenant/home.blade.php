@@ -11,12 +11,17 @@
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold">Welcome to {{ tenant('name') }}</h1>
-                <form method="POST" action="{{ route('tenant-logout') }}">
-                    @csrf
-                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
-                        Logout
-                    </button>
-                </form>
+                <div class="flex space-x-4">
+                    <a href="{{ route('tenant.customization.edit') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                        Customize Portal
+                    </a>
+                    <form method="POST" action="{{ route('tenant-logout') }}">
+                        @csrf
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+                            Logout
+                        </button>
+                    </form>
+                </div>
             </div>
             
             <div class="space-y-4">
