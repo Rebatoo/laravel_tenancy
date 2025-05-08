@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Stancl\Tenancy\Database\Contracts\TenantWithDatabase;
 
 class TenantController extends Controller
 {
@@ -231,5 +233,54 @@ class TenantController extends Controller
             return redirect()->route('tenants.index')
                 ->with('success', 'Tenant has been rejected.');
         }
+    }
+
+    public function register(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:tenants,email',
+            'domain_name' => 'required|string|unique:domains,domain',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        // Create tenant
+        $tenant = Tenant::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'is_active' => false,
+            'verification_status' => 'pending',
+        ]);
+
+        // Create domain
+        $tenant->domains()->create([
+            'domain' => $validatedData['domain_name'] . '.' . config('app.domain')
+        ]);
+
+        // Create tenant database
+        if ($tenant instanceof TenantWithDatabase) {
+            $tenant->database()->makeCredentials();
+            $tenant->database()->manager()->createDatabase($tenant);
+        }
+
+        // Initialize tenancy and run migrations
+        tenancy()->initialize($tenant);
+        
+        Artisan::call('tenants:migrate', [
+            '--tenants' => [$tenant->id],
+            '--force' => true,
+        ]);
+
+        // Create admin user
+        User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'is_admin' => true,
+        ]);
+
+        return redirect()->route('homepage')
+            ->with('success', 'Tenant registered successfully!');
     }
 }

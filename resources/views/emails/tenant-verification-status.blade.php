@@ -47,6 +47,12 @@
         <p>Dear {{ $emailData['tenant_name'] }},</p>
 
         @if($emailData['status'] === 'verified')
+            <p>Congratulations! Your account is verified.</p>
+        @else
+            <p>Your account was rejected.</p>
+        @endif
+
+        @if($emailData['status'] === 'verified')
             <p>Congratulations! Your tenant account has been verified and approved. You can now access your account using the following URL:</p>
             <p><a href="https://{{ $emailData['login_url'] }}" class="button">Access Your Account</a></p>
             <p>Your account is now active and you can start using all the features of our platform.</p>

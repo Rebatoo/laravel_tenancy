@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantRegistrationController;
 use App\Http\Controllers\AuthorizedAdminController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\Tenant\Auth\GoogleController;
+use App\Http\Controllers\Tenant\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -40,6 +42,24 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/authorized-admins', [AuthorizedAdminController::class, 'store'])->name('authorized-admins.store');
     Route::delete('/authorized-admins/{authorizedAdmin}', [AuthorizedAdminController::class, 'destroy'])->name('authorized-admins.destroy');
     Route::patch('/authorized-admins/{authorizedAdmin}/toggle-status', [AuthorizedAdminController::class, 'toggleStatus'])->name('authorized-admins.toggle-status');
+});
+
+Route::domain('{tenant}.localhost:8000')->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('tenant.home');
+});
+
+Route::prefix('tenant')->group(function () {
+    // Login Routes
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('tenant.login');
+    Route::post('/login', [LoginController::class, 'login'])->name('tenant.login.post');
+
+    // Google OAuth routes (central domain)
+    Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])->name('tenant.google.redirect');
+    Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('tenant.google.callback');
+
+    // Auth
+    Route::get('/register', [RegisterController::class, 'showForm'])->name('tenant.register.form');
+    Route::post('/register', [RegisterController::class, 'register'])->name('tenant.register');
 });
 
 require __DIR__.'/auth.php';
