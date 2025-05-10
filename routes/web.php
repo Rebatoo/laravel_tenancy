@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantRegistrationController;
 use App\Http\Controllers\AuthorizedAdminController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\Tenant\Auth\GoogleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,5 +42,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/authorized-admins/{authorizedAdmin}', [AuthorizedAdminController::class, 'destroy'])->name('authorized-admins.destroy');
     Route::patch('/authorized-admins/{authorizedAdmin}/toggle-status', [AuthorizedAdminController::class, 'toggleStatus'])->name('authorized-admins.toggle-status');
 });
+
+Route::get('/tenant/auth/google/callback', [GoogleController::class, 'callback'])->name('tenant.google.callback');
 
 require __DIR__.'/auth.php';
