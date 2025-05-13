@@ -57,4 +57,34 @@ class CustomizationController extends Controller
 
         return response()->json(['message' => 'Customization removed successfully']);
     }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'theme_color' => 'sometimes|string',
+            'primary_color' => 'sometimes|string',
+            'secondary_color' => 'sometimes|string',
+            'logo' => 'sometimes|image|max:2048',
+        ]);
+
+        $customizations = tenant()->customizations ?? [];
+
+        // Handle file upload
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('public/tenant-logos');
+            $customizations['logo_url'] = Storage::url($path);
+        }
+
+        // Update other customizations
+        foreach (['theme_color', 'primary_color', 'secondary_color'] as $field) {
+            if ($request->filled($field)) {
+                $customizations[$field] = $request->input($field);
+            }
+        }
+
+        // Save to tenant
+        tenant()->update(['customizations' => $customizations]);
+
+        return redirect()->back()->with('success', 'Customizations saved successfully!');
+    }
 } 

@@ -68,9 +68,8 @@ Route::middleware([
         });
 
         Route::prefix('customizations')->group(function () {
-            Route::get('/', [CustomizationController::class, 'getCustomizations']);
-            Route::post('/', [CustomizationController::class, 'updateCustomization']);
-            Route::delete('/', [CustomizationController::class, 'removeCustomization']);
+            Route::get('/', [CustomizationController::class, 'index'])->name('tenant.customize');
+            Route::post('/', [CustomizationController::class, 'store'])->name('tenant.customizations.store');
         });
 
         Route::get('/customize', function () {

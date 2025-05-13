@@ -4,7 +4,23 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6">Customize Your Application</h1>
     
-    <form id="customization-form" class="space-y-6" enctype="multipart/form-data">
+    @if(session('success'))
+        <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
+    <form id="customization-form" class="space-y-6" method="POST" action="{{ route('tenant.customizations.store') }}" enctype="multipart/form-data">
         @csrf
         
         <div>
@@ -52,28 +68,9 @@
 </div>
 
 <script>
-    document.getElementById('customization-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        
-        try {
-            const response = await fetch('/customizations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify(data)
-            });
-            
-            const result = await response.json();
-            alert(result.message || 'Customizations saved successfully');
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to save customizations');
-        }
+    document.getElementById('customization-form').addEventListener('submit', function(e) {
+        // Let the normal form submission happen
+        // We'll handle success/error via Laravel's redirects and session flashes
     });
 </script>
 @endsection 
