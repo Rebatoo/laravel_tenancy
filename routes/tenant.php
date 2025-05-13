@@ -13,6 +13,7 @@ use App\Http\Controllers\LaundryLogController;
 use App\Http\Controllers\TenantAdminController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Tenant\UpdateController;
+use App\Http\Controllers\Tenant\CustomizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,18 @@ Route::middleware([
             Route::get('/check', [UpdateController::class, 'checkForUpdates']);
             Route::post('/apply', [UpdateController::class, 'applyUpdate']);
         });
+
+        Route::prefix('customizations')->group(function () {
+            Route::get('/', [CustomizationController::class, 'getCustomizations']);
+            Route::post('/', [CustomizationController::class, 'updateCustomization']);
+            Route::delete('/', [CustomizationController::class, 'removeCustomization']);
+        });
+
+        Route::get('/customize', function () {
+            return view('tenant.customize', [
+                'customizations' => tenant()->customizations ?? []
+            ]);
+        })->name('tenant.customize');
     });
 
     // Customer Management Routes (accessible by both auth and worker)

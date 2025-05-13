@@ -20,7 +20,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'verification_status',
         'temp_domain',
         'current_version',
-        'pending_version'
+        'pending_version',
+        'customizations',
     ];
 
     public static function getCustomColumns(): array
