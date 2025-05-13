@@ -18,7 +18,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'is_active',
         'is_premium',
         'verification_status',
-        'temp_domain'
+        'temp_domain',
+        'current_version',
+        'pending_version'
     ];
 
     public static function getCustomColumns(): array
@@ -32,6 +34,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'is_premium',
             'verification_status',
             'temp_domain',
+            'current_version',
+            'pending_version',
             'created_at',
             'updated_at',
         ];

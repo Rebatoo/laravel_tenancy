@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LaundryLogController;
 use App\Http\Controllers\TenantAdminController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\Tenant\UpdateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,11 @@ Route::middleware([
 
         // Analytics Route (Premium Feature)
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('tenant.analytics');
+
+        Route::prefix('updates')->group(function () {
+            Route::get('/check', [UpdateController::class, 'checkForUpdates']);
+            Route::post('/apply', [UpdateController::class, 'applyUpdate']);
+        });
     });
 
     // Customer Management Routes (accessible by both auth and worker)
