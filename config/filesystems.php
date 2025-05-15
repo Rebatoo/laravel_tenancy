@@ -60,6 +60,20 @@ return [
             'report' => false,
         ],
 
+        'tenant' => [
+            'driver' => 'local',
+            'root' => storage_path('tenant'.tenant('id').'/app/public'),
+            'url' => env('APP_URL').'/storage/tenant'.tenant('id'),
+            'visibility' => 'public',
+        ],
+
+        'tenant_assets' => [
+            'driver' => 'local',
+            'root' => storage_path('tenant'.tenant('id').'/app/public'),
+            'url' => env('APP_URL').'/tenant-assets/'.tenant('id'),
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

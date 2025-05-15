@@ -5,18 +5,24 @@
     <h1 class="text-2xl font-bold mb-6">Customize Your Application</h1>
     
     @if(session('success'))
-        <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+        <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
             {{ session('success') }}
         </div>
     @endif
 
     @if($errors->any())
-        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-            <ul>
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+            <ul class="list-disc list-inside">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+            {{ session('error') }}
         </div>
     @endif
     
@@ -26,7 +32,7 @@
         <div>
             <label for="theme_color" class="block text-sm font-medium text-gray-700">Theme Color</label>
             <input type="color" id="theme_color" name="theme_color" 
-                   value="{{ $customizations['theme_color'] ?? '#3b82f6' }}"
+                   value="{{ $customizations['theme_color'] ?? '#ffffff' }}"
                    class="mt-1 block w-20 h-10">
         </div>
         
@@ -51,17 +57,23 @@
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
         </div>
         
-        <div>
-            <label class="block text-sm font-medium text-gray-700">Upload Logo</label>
-            <input type="file" id="logo" name="logo" class="mt-1 block w-full">
-            @if($customizations['logo_url'] ?? false)
-                <div class="mt-2">
-                    <img src="{{ $customizations['logo_url'] }}" alt="Current Logo" class="h-16">
-                </div>
-            @endif
+        <div class="mt-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="logo">
+                Upload Logo
+            </label>
+            <input type="file" name="logo" accept="image/*">
         </div>
         
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+        @if(isset($customizations['logo']))
+            <div class="mt-2">
+                <p class="text-sm text-gray-500">Current Logo:</p>
+                <img src="{{ Storage::disk('tenant_assets')->url($customizations['logo']) }}" 
+                     alt="Current Logo" 
+                     class="h-16 mt-2">
+            </div>
+        @endif
+        
+        <button type="submit" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
             Save Customizations
         </button>
     </form>

@@ -38,8 +38,8 @@
                     </div>
                     <div>
                         <label for="domain_name" class="sr-only">Domain Name</label>
-                        <input id="domain_name" name="domain_name" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Domain Name (e.g., mylaundry)" value="{{ old('domain_name') }}">
-                        <p class="text-xs text-gray-500 mt-1">Your domain will be: yourdomain.laundryhub.com</p>
+                        <input id="domain_name" name="domain_name" type="text" required placeholder="e.g., mylaundry">
+                        <small class="text-xs text-gray-500">Your full domain: <span id="full-domain">mylaundry.laundryhub.com</span></small>
                         @error('domain_name')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror

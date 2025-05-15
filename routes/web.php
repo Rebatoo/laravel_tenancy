@@ -45,4 +45,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::get('/tenant/auth/google/callback', [GoogleController::class, 'callback'])->name('tenant.google.callback');
 
+Route::get('/tenant-assets/{tenant_id}/{path}', function ($tenant_id, $path) {
+    $storagePath = storage_path("tenant{$tenant_id}/app/public/{$path}");
+    
+    if (!file_exists($storagePath)) {
+        abort(404);
+    }
+
+    return response()->file($storagePath);
+})->where('path', '.*');
+
 require __DIR__.'/auth.php';

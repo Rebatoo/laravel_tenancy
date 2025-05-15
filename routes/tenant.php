@@ -107,4 +107,7 @@ Route::middleware([
     Route::middleware(['auth:worker'])->group(function () {
         Route::get('/worker/dashboard', [TenantAuthController::class, 'workerDashboard'])->name('tenant.workers.dashboard');
     });
+
+    Route::post('/customizations', [CustomizationController::class, 'store'])
+        ->name('tenant.customizations.store');
 });

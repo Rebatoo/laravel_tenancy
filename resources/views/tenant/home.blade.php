@@ -7,6 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
+    <div class="flex justify-center py-4 bg-white shadow-sm">
+        @if(tenant('customizations') && tenant('customizations')['logo'])
+            <img 
+                src="{{ Storage::disk('tenant_assets')->url(tenant('customizations')['logo']) }}" 
+                alt="{{ tenant('name') }} Logo" 
+                class="h-16"
+            >
+        @else
+            <span class="text-xl font-bold text-gray-700">{{ tenant('name') }}</span>
+        @endif
+    </div>
+
     <div class="min-h-screen flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
             <div class="flex justify-between items-center mb-6">
