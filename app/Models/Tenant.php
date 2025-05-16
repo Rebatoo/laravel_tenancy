@@ -6,6 +6,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Illuminate\Support\Facades\Storage;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
@@ -22,6 +23,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'current_version',
         'pending_version',
         'customizations',
+        'logo_path',
     ];
 
     public static function getCustomColumns(): array
@@ -37,13 +39,40 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'temp_domain',
             'current_version',
             'pending_version',
+            'logo_path',
             'created_at',
             'updated_at',
         ];
     }
+
+    /**
+     * Store uploaded logo and save path
+     */
+    public function storeLogo($file)
+    {
+        // Delete old logo if exists
+        if ($this->logo_path) {
+            Storage::disk('public')->delete($this->logo_path);
+        }
+
+        // Store new logo
+        $path = $file->store('tenant-logos', 'public');
+        $this->update(['logo_path' => $path]);
+        
+        return $path;
+    }
+
+    /**
+     * Get the logo URL
+     */
+    public function getLogoUrlAttribute()
+    {
+        return $this->logo_path ? Storage::url($this->logo_path) : null;
+    }
+
     public function setPasswordAttribute($value)
     {
-       return $this->attributes['password'] =  bcrypt($value);
+        $this->attributes['password'] = bcrypt($value);
     }
 
     public function isPremium(): bool

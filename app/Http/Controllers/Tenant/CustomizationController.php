@@ -61,27 +61,15 @@ class CustomizationController extends Controller
     public function store(Request $request)
     {
         $tenant = tenant();
-        if (!$tenant) {
-            return response()->json(['error' => 'Tenant not found.'], 404);
-        }
-
-        $request->validate([
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $path = $request->file('logo')->store('tenant-logos', 'public');
+        
+        $tenant->update([
+            'logo_path' => $path,
+            'customizations' => [
+                'logo' => url("/tenant-assets/{$tenant->id}/{$path}"),
+            ],
         ]);
 
-        $customizations = $tenant->customizations ?? [];
-        if ($request->hasFile('logo')) {
-            // Delete old logo if exists
-            if (isset($customizations['logo'])) {
-                Storage::disk('tenant_assets')->delete($customizations['logo']);
-            }
-
-            // Store using tenant_assets disk
-            $path = $request->file('logo')->store('tenant-logos', 'tenant_assets');
-            $customizations['logo'] = $path;
-            $tenant->update(['customizations' => $customizations]);
-        }
-
-        return redirect()->back()->with('success', 'Logo uploaded!');
+        return back()->with('success', 'Logo uploaded!');
     }
 } 

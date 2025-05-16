@@ -15,10 +15,12 @@ class TenantHomeController extends Controller
         
         // Get all users
         $users = User::all();
+        $tenant = tenant(); // Get the current tenant
 
         return view('tenant.home', [
             'admin' => $admin,
-            'users' => $users
+            'users' => $users,
+            'tenant' => $tenant // Pass tenant to the view
         ]);
     }
 }

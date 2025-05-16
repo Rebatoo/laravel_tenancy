@@ -8,15 +8,37 @@
 </head>
 <body class="bg-gray-100">
     <div class="flex justify-center py-4 bg-white shadow-sm">
-        @if(tenant('customizations') && tenant('customizations')['logo'])
-            <img 
-                src="{{ Storage::disk('tenant_assets')->url(tenant('customizations')['logo']) }}" 
-                alt="{{ tenant('name') }} Logo" 
-                class="h-16"
-            >
-        @else
-            <span class="text-xl font-bold text-gray-700">{{ tenant('name') }}</span>
-        @endif
+        @php
+            $logoUrl = tenant()->customizations['logo'] ?? '';
+            $physicalPath = storage_path('app/public/tenant-logos/'.basename(tenant()->logo_path ?? ''));
+        @endphp
+
+        <div class="text-center border rounded-lg p-4 
+                    {{ file_exists($physicalPath) ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50' }}">
+            @if(file_exists($physicalPath))
+                <div class="relative">
+                    <img src="{{ $logoUrl }}?v={{ time() }}" 
+                         alt="Tenant Logo"
+                         class="h-16 mx-auto"
+                         id="tenant-logo"
+                         onerror="document.getElementById('logo-fallback').classList.remove('hidden')">
+                    <div id="logo-fallback" class="hidden text-red-500 text-sm mt-2">
+                        Image failed to load from: {{ $logoUrl }}
+                    </div>
+                </div>
+                <p class="text-xs mt-2 text-green-600">
+                    File exists at: {{ $physicalPath }}
+                </p>
+            @else
+                <p class="text-red-500">File not found at:</p>
+                <p class="text-xs break-all">{{ $physicalPath }}</p>
+            @endif
+            
+            <a href="{{ $logoUrl }}" target="_blank" 
+               class="text-blue-500 text-xs mt-2 inline-block">
+               Test Direct Image URL
+            </a>
+        </div>
     </div>
 
     <div class="min-h-screen flex items-center justify-center">

@@ -64,12 +64,17 @@
             <input type="file" name="logo" accept="image/*">
         </div>
         
-        @if(isset($customizations['logo']))
-            <div class="mt-2">
-                <p class="text-sm text-gray-500">Current Logo:</p>
-                <img src="{{ Storage::disk('tenant_assets')->url($customizations['logo']) }}" 
-                     alt="Current Logo" 
-                     class="h-16 mt-2">
+        @if(tenant()->customizations['logo'] ?? false)
+            <div class="mt-4 text-center">
+                <p class="text-sm font-medium text-gray-700 mb-2">Current Logo:</p>
+                <img src="{{ tenant()->customizations['logo'] }}" 
+                     alt="Current Logo Preview" 
+                     class="h-20 mx-auto rounded-lg border border-gray-200 p-1"
+                     loading="eager"
+                     onerror="this.style.display='none'">
+                <p class="text-xs text-gray-500 mt-1">
+                    {{ basename(tenant()->logo_path) }}
+                </p>
             </div>
         @endif
         
