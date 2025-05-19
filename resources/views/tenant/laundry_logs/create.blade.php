@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Laundry Log - {{ tenant('name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Price per kg for each laundry type
+        const prices = {
+            'wash_only': 50,
+            'wash_and_fold': 70,
+            'dry_clean': 100,
+            'iron_only': 30
+        };
+
+        function calculateTotalPrice() {
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            const laundryType = document.getElementById('laundry_type').value;
+            const pricePerKg = prices[laundryType] || 0;
+            const totalPrice = weight * pricePerKg;
+            document.getElementById('total_price').value = totalPrice.toFixed(2);
+        }
+
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('weight').addEventListener('input', calculateTotalPrice);
+            document.getElementById('laundry_type').addEventListener('change', calculateTotalPrice);
+        });
+    </script>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen flex items-center justify-center">
@@ -57,7 +80,8 @@
                 <div class="mb-4">
                     <label for="weight" class="block text-gray-700 text-sm font-bold mb-2">Weight (kg)</label>
                     <input id="weight" type="number" step="0.01" name="weight" value="{{ old('weight') }}"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('weight') border-red-500 @enderror">
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('weight') border-red-500 @enderror"
+                        onchange="calculateTotalPrice()">
                     @error('weight')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                     @enderror
@@ -66,8 +90,8 @@
                 <!-- Total Price -->
                 <div class="mb-4">
                     <label for="total_price" class="block text-gray-700 text-sm font-bold mb-2">Total Price (₱)</label>
-                    <input id="total_price" type="number" step="0.01" name="total_price" value="{{ old('total_price') }}" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('total_price') border-red-500 @enderror">
+                    <input id="total_price" type="number" step="0.01" name="total_price" value="{{ old('total_price') }}" required readonly
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-50 @error('total_price') border-red-500 @enderror">
                     @error('total_price')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                     @enderror

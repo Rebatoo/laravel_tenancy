@@ -62,7 +62,7 @@
                                         {{ $log->items_count ?? 0 }} items
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ₱{{ number_format($log->total_amount, 2) }}
+                                        ₱{{ number_format($log->total_price, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 py-1 text-xs font-semibold rounded-full 
