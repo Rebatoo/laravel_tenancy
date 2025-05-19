@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TenantCustomization extends Model
 {
     protected $fillable = [
+        'tenant_id',
         'logo_path',
         'primary_color',
         'secondary_color'
