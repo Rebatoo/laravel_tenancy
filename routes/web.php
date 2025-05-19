@@ -3,7 +3,6 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantRegistrationController;
 use App\Http\Controllers\AuthorizedAdminController;
-use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

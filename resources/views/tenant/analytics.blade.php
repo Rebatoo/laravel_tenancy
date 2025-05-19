@@ -36,7 +36,12 @@
             <!-- Laundry Logs Table -->
             <div class="bg-white rounded-lg shadow overflow-hidden">
                 <div class="p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Laundry Logs</h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Laundry Logs</h2>
+                        <a href="{{ route('tenant.analytics.download') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Download PDF
+                        </a>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">

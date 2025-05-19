@@ -65,6 +65,7 @@ Route::middleware([
 
         // Analytics Route (Premium Feature)
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('tenant.analytics');
+        Route::get('/analytics/download', [AnalyticsController::class, 'downloadPdf'])->name('tenant.analytics.download');
 
         // Premium Request Routes
         Route::get('/premium-request', [PremiumRequestController::class, 'create'])->name('tenant.premium-request.create');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LaundryLog;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AnalyticsController extends Controller
 {
@@ -25,5 +26,18 @@ class AnalyticsController extends Controller
             'totalRevenue' => $totalRevenue,
             'averageOrderValue' => $averageOrderValue
         ]);
+    }
+
+    public function downloadPdf()
+    {
+        $laundryLogs = LaundryLog::with(['customer', 'worker'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $pdf = PDF::loadView('tenant.analytics-pdf', [
+            'laundryLogs' => $laundryLogs
+        ]);
+
+        return $pdf->download('analytics-report.pdf');
     }
 } 
