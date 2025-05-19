@@ -5,71 +5,87 @@
         <p class="text-gray-600 dark:text-gray-400 mt-2">Join LaundryHub today</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" class="space-y-6">
         @csrf
 
-        <!-- Name -->
-        <div class="relative">
-            <x-input-label for="name" :value="__('Name')" />
-            <div class="flex items-center">
-                <span class="absolute left-3 top-[2.4rem] text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                </span>
-                <x-text-input id="name" class="block mt-1 w-full pl-10" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Enter your full name" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Name -->
+            <div class="relative">
+                <x-input-label for="name" :value="__('Full Name')" />
+                <div class="flex items-center">
+                    <span class="absolute left-3 top-[2.4rem] text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </span>
+                    <x-text-input id="name" class="block mt-1 w-full pl-10" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="John Doe" />
+                </div>
+                <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+
+            <!-- Email Address -->
+            <div class="relative">
+                <x-input-label for="email" :value="__('Email Address')" />
+                <div class="flex items-center">
+                    <span class="absolute left-3 top-[2.4rem] text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                        </svg>
+                    </span>
+                    <x-text-input id="email" class="block mt-1 w-full pl-10" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="john@example.com" />
+                </div>
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
+
+            <!-- Password -->
+            <div class="relative">
+                <x-input-label for="password" :value="__('Password')" />
+                <div class="flex items-center">
+                    <span class="absolute left-3 top-[2.4rem] text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </span>
+                    <x-text-input id="password" class="block mt-1 w-full pl-10"
+                                type="password"
+                                name="password"
+                                required autocomplete="new-password"
+                                placeholder="••••••••" />
+                </div>
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Must be at least 8 characters</p>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="relative">
+                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                <div class="flex items-center">
+                    <span class="absolute left-3 top-[2.4rem] text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </span>
+                    <x-text-input id="password_confirmation" class="block mt-1 w-full pl-10"
+                                type="password"
+                                name="password_confirmation" 
+                                required autocomplete="new-password"
+                                placeholder="••••••••" />
+                </div>
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            </div>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4 relative">
-            <x-input-label for="email" :value="__('Email')" />
-            <div class="flex items-center">
-                <span class="absolute left-3 top-[2.4rem] text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                    </svg>
-                </span>
-                <x-text-input id="email" class="block mt-1 w-full pl-10" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="Enter your email" />
+        <!-- Terms and Privacy Policy -->
+        <div class="flex items-start mt-6">
+            <div class="flex items-center h-5">
+                <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500">
             </div>
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4 relative">
-            <x-input-label for="password" :value="__('Password')" />
-            <div class="flex items-center">
-                <span class="absolute left-3 top-[2.4rem] text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </span>
-                <x-text-input id="password" class="block mt-1 w-full pl-10"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password"
-                            placeholder="Choose a strong password" />
+            <div class="ml-3 text-sm">
+                <label for="terms" class="font-medium text-gray-700 dark:text-gray-300">I agree to the</label>
+                <a href="#" class="font-medium text-blue-600 hover:text-blue-500"> Terms </a>
+                <span class="text-gray-500">and</span>
+                <a href="#" class="font-medium text-blue-600 hover:text-blue-500"> Privacy Policy</a>
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4 relative">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <div class="flex items-center">
-                <span class="absolute left-3 top-[2.4rem] text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </span>
-                <x-text-input id="password_confirmation" class="block mt-1 w-full pl-10"
-                            type="password"
-                            name="password_confirmation" 
-                            required autocomplete="new-password"
-                            placeholder="Confirm your password" />
-            </div>
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
         <div class="mt-6">
@@ -89,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="mt-6">
+            <div class="mt-6 grid grid-cols-1 gap-3">
                 <a href="{{ route('auth.google') }}" 
                    class="w-full inline-flex justify-center items-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
                     <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
