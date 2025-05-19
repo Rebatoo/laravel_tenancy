@@ -10,14 +10,10 @@ return new class extends Migration
     {
         Schema::create('tenant_customizations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained('tenants')->onDelete('cascade');
             $table->string('logo_path')->nullable();
             $table->string('primary_color')->default('#3B82F6'); // Default blue
             $table->string('secondary_color')->default('#1E40AF'); // Default dark blue
             $table->timestamps();
-
-            // Add unique constraint to ensure one customization per tenant
-            $table->unique('tenant_id');
         });
     }
 

@@ -22,12 +22,10 @@ class TenantCustomizationController extends Controller
             'secondary_color' => 'required|regex:/^#[a-fA-F0-9]{6}$/',
         ]);
 
-        $tenantId = tenant('id');
-        $customization = TenantCustomization::where('tenant_id', $tenantId)->first();
+        $customization = TenantCustomization::first();
 
         if (!$customization) {
             $customization = new TenantCustomization();
-            $customization->tenant_id = $tenantId;
         }
 
         if ($request->hasFile('logo')) {
@@ -36,8 +34,8 @@ class TenantCustomizationController extends Controller
                 Storage::disk('public')->delete($customization->logo_path);
             }
 
-            // Store new logo with tenant-specific path
-            $path = $request->file('logo')->store("tenants/{$tenantId}/logos", 'public');
+            // Store new logo
+            $path = $request->file('logo')->store('logos', 'public');
             $customization->logo_path = $path;
         }
 
