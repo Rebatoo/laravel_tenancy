@@ -1,4 +1,8 @@
 <x-guest-layout>
+    <div class="flex justify-center mb-6">
+        <img src="{{ asset('images/logo.png') }}" alt="LaundryHub Logo" class="h-16 w-auto">
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
