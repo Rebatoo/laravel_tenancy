@@ -14,6 +14,7 @@ use App\Http\Controllers\TenantAdminController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\PremiumRequestController;
 use App\Http\Controllers\TenantCustomizationController;
+use App\Http\Controllers\UpdateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,5 +101,13 @@ Route::middleware([
     // Worker Dashboard Route (protected by worker guard)
     Route::middleware(['auth:worker'])->group(function () {
         Route::get('/worker/dashboard', [TenantAuthController::class, 'workerDashboard'])->name('tenant.workers.dashboard');
+    });
+
+    // Update routes
+    Route::prefix('updates')->group(function () {
+        Route::get('/check', [UpdateController::class, 'check']);
+        Route::post('/install/{version}', [UpdateController::class, 'install']);
+        Route::get('/install/{version}', [UpdateController::class, 'install']);
+        Route::get('/required', [UpdateController::class, 'required']);
     });
 });
