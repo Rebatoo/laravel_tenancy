@@ -5,13 +5,8 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                    <a href="{{ route('tenants.index') }}"></a>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
-                
-                    <a href="{{ route('tenants.index') }}">
-                      Tenant
+                    <a href="{{ route('dashboard') }}" class="flex items-center">
+                        <img src="{{ asset('images/logo-laundry.png') }}" alt="C-Laundry" class="h-16 w-auto object-contain" />
                     </a>
                 </div>
 
