@@ -19,6 +19,19 @@
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Warning Banner for Inactive Tenant -->
+    @if(!tenant('is_active'))
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+        <div class="flex items-center">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <p class="font-bold">Account Disabled</p>
+        </div>
+        <p class="mt-2">Your account has been disabled. Please contact the system administrator for assistance.</p>
+    </div>
+    @endif
+
     <!-- Top Navigation -->
     <nav class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +41,8 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('tenant.customization.edit') }}" 
-                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white {{ tenant('is_active') ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400 cursor-not-allowed' }} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                       {{ !tenant('is_active') ? 'disabled' : '' }}>
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
@@ -129,7 +143,8 @@
                                     <dt class="text-sm font-medium text-gray-500 truncate">Upgrade to Premium</dt>
                                     <dd class="mt-2">
                                         <a href="{{ route('tenant.premium-request.create') }}" 
-                                           class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                           class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white {{ tenant('is_active') ? 'bg-purple-600 hover:bg-purple-700' : 'bg-gray-400 cursor-not-allowed' }} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                           {{ !tenant('is_active') ? 'disabled' : '' }}>
                                             Request Premium Access
                                         </a>
                                     </dd>
@@ -148,7 +163,8 @@
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Admin Management</h3>
                         <a href="{{ route('tenant.admins.index') }}" 
-                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white {{ tenant('is_active') ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400 cursor-not-allowed' }} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                           {{ !tenant('is_active') ? 'disabled' : '' }}>
                             Manage Admins
                         </a>
                     </div>
@@ -159,7 +175,8 @@
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Workers Management</h3>
                         <a href="{{ route('tenant.workers.index') }}" 
-                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white {{ tenant('is_active') ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed' }} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                           {{ !tenant('is_active') ? 'disabled' : '' }}>
                             Manage Workers
                         </a>
                     </div>
@@ -171,7 +188,8 @@
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Laundry Analytics</h3>
                         @if(tenant('is_premium'))
                             <a href="{{ route('tenant.analytics') }}" 
-                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white {{ tenant('is_active') ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400 cursor-not-allowed' }} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                               {{ !tenant('is_active') ? 'disabled' : '' }}>
                                 View Analytics
                             </a>
                         @else
@@ -192,7 +210,8 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-medium text-gray-900">Users Overview</h3>
                         <button onclick="toggleUsersTable()" 
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white {{ tenant('is_active') ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed' }} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                {{ !tenant('is_active') ? 'disabled' : '' }}>
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
