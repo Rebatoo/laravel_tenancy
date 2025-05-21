@@ -141,95 +141,66 @@ class TenantController extends Controller
 
     public function verifyTenant(Request $request, Tenant $tenant)
     {
-        $validated = $request->validate([
-            'verification_status' => 'required|in:verified,rejected',
-        ]);
-
-        if ($validated['verification_status'] === 'verified') {
-            try {
-                // Create the domain
-                $tenant->domains()->create([
-                    'domain' => $tenant->temp_domain . '.' . config('app.domain')
-                ]);
-
-                // Initialize tenancy to create the tenant's database
-                tenancy()->initialize($tenant);
-
-                // Run migrations in the tenant's database
-                Artisan::call('migrate', [
-                    '--database' => 'tenant',
-                    '--path' => 'database/migrations',
-                    '--force' => true,
-                ]);
-
-                // Create the admin user in the tenant's database
-                User::create([
-                    'name' => $tenant->name,
-                    'email' => $tenant->email,
-                    'password' => $tenant->password, // Already hashed in the Tenant model
-                    'is_admin' => true,
-                ]);
-
-                // End tenancy
-                tenancy()->end();
-
-                // Update tenant status
-                $tenant->update([
-                    'verification_status' => 'verified',
-                    'is_active' => true,
-                    'temp_domain' => null // Clear temporary domain
-                ]);
-
-                // Send verification email
-                try {
-                    $emailData = [
-                        'tenant_name' => $tenant->name,
-                        'status' => 'verified',
-                        'login_url' => $tenant->domains->first()->domain
-                    ];
-                    
-                    Mail::to($tenant->email)->send(new \App\Mail\TenantVerificationStatus($emailData));
-                } catch (\Exception $e) {
-                    // Log email sending failure but don't stop the process
-                    \Log::error('Failed to send verification email: ' . $e->getMessage());
-                }
-
-                return redirect()->route('tenants.index')
-                    ->with('success', 'Tenant has been verified and initialized successfully.');
-
-            } catch (\Exception $e) {
-                // If anything fails during initialization, mark as rejected
-                $tenant->update([
-                    'verification_status' => 'rejected',
-                    'is_active' => false
-                ]);
-
-                return redirect()->route('tenants.index')
-                    ->with('error', 'Failed to initialize tenant: ' . $e->getMessage());
-            }
-        } else {
-            // Handle rejection
-            $tenant->update([
-                'verification_status' => 'rejected',
-                'is_active' => false
+        try {
+            // Create the domain
+            $tenant->domains()->create([
+                'domain' => $tenant->temp_domain . '.' . config('app.domain')
             ]);
 
-            // Send rejection email
+            // Initialize tenancy to create the tenant's database
+            tenancy()->initialize($tenant);
+
+            // Run migrations in the tenant's database
+            Artisan::call('migrate', [
+                '--database' => 'tenant',
+                '--path' => 'database/migrations',
+                '--force' => true,
+            ]);
+
+            // Create the admin user in the tenant's database
+            User::create([
+                'name' => $tenant->name,
+                'email' => $tenant->email,
+                'password' => $tenant->password, // Already hashed in the Tenant model
+                'is_admin' => true,
+            ]);
+
+            // End tenancy
+            tenancy()->end();
+
+            // Update tenant status - Always set is_active to true when verified
+            $tenant->update([
+                'verification_status' => 'verified',
+                'is_active' => true, // Always set to true when verified
+                'temp_domain' => null // Clear temporary domain
+            ]);
+
+            // Send verification email
             try {
                 $emailData = [
                     'tenant_name' => $tenant->name,
-                    'status' => 'rejected',
-                    'login_url' => null
+                    'status' => 'verified',
+                    'login_url' => $tenant->domains->first()->domain
                 ];
                 
                 Mail::to($tenant->email)->send(new \App\Mail\TenantVerificationStatus($emailData));
             } catch (\Exception $e) {
                 // Log email sending failure but don't stop the process
-                \Log::error('Failed to send rejection email: ' . $e->getMessage());
+                \Log::error('Failed to send verification email: ' . $e->getMessage());
             }
 
             return redirect()->route('tenants.index')
-                ->with('success', 'Tenant has been rejected.');
+                ->with('success', 'Tenant has been verified and activated successfully.');
+
+        } catch (\Exception $e) {
+            // If anything fails during initialization, mark as rejected and inactive
+            $tenant->update([
+                'verification_status' => 'rejected',
+                'is_active' => false
+            ]);
+
+            return redirect()->route('tenants.index')
+                ->with('error', 'Failed to initialize tenant: ' . $e->getMessage());
         }
     }
 }

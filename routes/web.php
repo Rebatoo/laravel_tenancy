@@ -3,7 +3,9 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantRegistrationController;
 use App\Http\Controllers\AuthorizedAdminController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('homepage');
@@ -12,6 +14,8 @@ Route::get('/', function () {
 Route::get('/homepage', function () {
     return view('homepage');
 })->name('homepage');
+
+Route::get('/test10', [TestController::class, 'index'])->name('test.index');
 
 // Tenant Registration Routes
 Route::get('/tenantregister', [TenantRegistrationController::class, 'showRegistrationForm'])->name('tenant.register.form');
