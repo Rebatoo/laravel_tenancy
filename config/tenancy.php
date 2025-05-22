@@ -17,8 +17,7 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        '127.0.0.1',
-        'localhost',
+        'localhost', // or your main domain
     ],
 
     /**
@@ -195,5 +194,10 @@ return [
     'seeder_parameters' => [
         '--class' => 'DatabaseSeeder', // root seeder class
         // '--force' => true, // This needs to be true to seed tenant databases in production
+    ],
+
+    'tenant_migrations' => [
+        database_path('migrations/tenant'),
+        // Add other tenant-specific migrations if needed
     ],
 ];

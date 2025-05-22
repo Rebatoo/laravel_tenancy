@@ -10,10 +10,16 @@ return new class extends Migration
     {
         Schema::create('tenant_customizations', function (Blueprint $table) {
             $table->id();
+            $table->string('tenant_id');
             $table->string('logo_path')->nullable();
             $table->string('primary_color')->default('#3B82F6'); // Default blue
             $table->string('secondary_color')->default('#1E40AF'); // Default dark blue
             $table->timestamps();
+
+            $table->foreign('tenant_id')
+                  ->references('id')
+                  ->on('tenants')
+                  ->onDelete('cascade');
         });
     }
 

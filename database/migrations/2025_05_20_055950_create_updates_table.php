@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('updates', function (Blueprint $table) {
-            $table->id();
-            $table->string('version');
-            $table->string('title');
-            $table->text('description');
-            $table->json('changes')->nullable();
-            $table->boolean('is_required')->default(false);
-            $table->boolean('is_published')->default(false);
-            $table->timestamp('published_at')->nullable();
-            $table->string('type')->default('feature'); // feature, bugfix, security
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('updates')) {
+            Schema::create('updates', function (Blueprint $table) {
+                $table->id();
+                $table->string('version');
+                $table->string('title');
+                $table->text('description');
+                $table->json('changes')->nullable();
+                $table->boolean('is_required')->default(false);
+                $table->boolean('is_published')->default(false);
+                $table->timestamp('published_at')->nullable();
+                $table->string('type')->default('feature'); // feature, bugfix, security
+                $table->timestamps();
+            });
+        }
     }
 
     /**

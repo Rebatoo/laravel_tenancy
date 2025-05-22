@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Worker;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Tenant;
 
 class TenantAuthController extends Controller
 {
@@ -22,26 +23,39 @@ class TenantAuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Check if email exists in users table
-        $user = User::where('email', $credentials['email'])->first();
+        \Log::info('Login attempt', ['email' => $credentials['email']]);
 
-        if ($user && Hash::check($credentials['password'], $user->password)) {
-            Auth::login($user, $request->filled('remember'));
+        // Check tenant status
+        $tenant = Tenant::where('email', $credentials['email'])->first();
+
+        if (!$tenant) {
+            \Log::warning('Tenant not found', ['email' => $credentials['email']]);
+            return back()->withErrors([
+                'email' => 'Tenant not found.',
+            ]);
+        }
+
+        if (!$tenant->is_active || $tenant->verification_status !== 'verified') {
+            \Log::warning('Tenant not active/verified', [
+                'email' => $credentials['email'],
+                'is_active' => $tenant->is_active,
+                'verification_status' => $tenant->verification_status
+            ]);
+            return back()->withErrors([
+                'email' => 'Tenant not approved yet.',
+            ]);
+        }
+
+        // Attempt login
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
             return redirect()->intended(route('tenant.home'));
         }
 
-        // If not found in users, check workers table
-        $worker = Worker::where('email', $credentials['email'])->first();
-
-        if ($worker && Hash::check($credentials['password'], $worker->password)) {
-            Auth::guard('worker')->login($worker, $request->filled('remember'));
-            return redirect()->intended(route('tenant.workers.dashboard'));
-        }
-
-        // If neither found, return with error
-        return back()
-            ->withInput($request->only('email'))
-            ->withErrors(['email' => 'These credentials do not match our records.']);
+        \Log::warning('Invalid credentials', ['email' => $credentials['email']]);
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 
     public function logout(Request $request)

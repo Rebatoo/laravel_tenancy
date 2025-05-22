@@ -125,4 +125,12 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'aliases' => [
+        // ...
+        'Tenancy' => Stancl\Tenancy\Facades\Tenancy::class,
+        'Log' => Illuminate\Support\Facades\Log::class,
+        'Route' => Illuminate\Support\Facades\Route::class,
+        'Auth' => Illuminate\Support\Facades\Auth::class,
+    ],
+
 ];

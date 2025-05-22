@@ -5,6 +5,7 @@ use App\Http\Controllers\TenantRegistrationController;
 use App\Http\Controllers\AuthorizedAdminController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
@@ -44,5 +45,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/authorized-admins/{authorizedAdmin}', [AuthorizedAdminController::class, 'destroy'])->name('authorized-admins.destroy');
     Route::patch('/authorized-admins/{authorizedAdmin}/toggle-status', [AuthorizedAdminController::class, 'toggleStatus'])->name('authorized-admins.toggle-status');
 });
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
 require __DIR__.'/auth.php';

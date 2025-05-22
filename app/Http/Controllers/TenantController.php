@@ -141,45 +141,45 @@ class TenantController extends Controller
 
     public function verifyTenant(Request $request, Tenant $tenant)
     {
-        \Log::info('Verification request data:', $request->all()); // Debug: Log the request
-
         $validated = $request->validate([
             'verification_status' => 'required|in:verified,rejected',
         ]);
 
-        \Log::info('Validated status:', ['status' => $validated['verification_status']]);
+        \Log::info('Verifying tenant', ['tenant_id' => $tenant->id, 'status' => $validated['verification_status']]);
 
         try {
             if ($validated['verification_status'] === 'verified') {
-                // Skip if already initialized
-                if (!$tenant->domains()->exists()) {
-                    $tenant->domains()->create([
-                        'domain' => $tenant->temp_domain . '.' . config('app.domain'),
-                    ]);
+                // Initialize tenancy
+                tenancy()->initialize($tenant);
 
-                    // Manually initialize tenancy (bypass TenantCreated event)
-                    tenancy()->initialize($tenant);
-                    Artisan::call('migrate', [
-                        '--database' => 'tenant',
-                        '--path' => 'database/migrations',
-                        '--force' => true,
-                    ]);
-                    tenancy()->end();
-                }
+                \Log::info('Running migrations for tenant', ['tenant_id' => $tenant->id]);
+                Artisan::call('migrate', [
+                    '--database' => 'tenant',
+                    '--path' => 'database/migrations',
+                    '--force' => true,
+                ]);
 
-                // Update tenant status
+                \Log::info('Creating admin user for tenant', ['tenant_id' => $tenant->id]);
+                \App\Models\User::create([
+                    'name' => $tenant->name,
+                    'email' => $tenant->email,
+                    'password' => $tenant->password,
+                    'is_admin' => true,
+                ]);
+
+                tenancy()->end();
+
                 $tenant->update([
                     'verification_status' => 'verified',
                     'is_active' => true,
                     'temp_domain' => null,
                 ]);
 
-                \Log::info('Tenant approved:', ['tenant_id' => $tenant->id]);
-
+                \Log::info('Tenant approved successfully', ['tenant_id' => $tenant->id]);
                 return redirect()->route('tenants.index')
                     ->with('success', 'Tenant approved and activated successfully.');
             } else {
-                // Reject the tenant
+                // Reject the tenant (keep temp_domain for reference)
                 $tenant->update([
                     'verification_status' => 'rejected',
                     'is_active' => false,
@@ -189,19 +189,15 @@ class TenantController extends Controller
                     ->with('success', 'Tenant rejected.');
             }
         } catch (\Exception $e) {
-            \Log::error('Tenant verification failed:', [
-                'error' => $e->getMessage(),
+            \Log::error('Tenant verification failed', [
                 'tenant_id' => $tenant->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-
-            // Only mark as rejected if the error is critical
-            if (str_contains($e->getMessage(), 'database') || str_contains($e->getMessage(), 'migrate')) {
-                $tenant->update([
-                    'verification_status' => 'rejected',
-                    'is_active' => false,
-                ]);
-            }
-
+            $tenant->update([
+                'verification_status' => 'rejected',
+                'is_active' => false,
+            ]);
             return redirect()->route('tenants.index')
                 ->with('error', 'Failed to verify tenant: ' . $e->getMessage());
         }

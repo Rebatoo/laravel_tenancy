@@ -1,3 +1,4 @@
+@use('Illuminate\Support\Facades\Auth')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +32,15 @@
     <div class="min-h-screen flex items-center justify-center">
         <div class="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
             <div>
-                @if($customization = \App\Models\TenantCustomization::first())
+                @php
+                    try {
+                        $customization = optional(\App\Models\TenantCustomization::first());
+                    } catch (\Exception $e) {
+                        $customization = null;
+                    }
+                @endphp
+
+                @if($customization && $customization->logo_path)
                     <div class="flex justify-center mb-4">
                         <img src="{{ asset('storage/' . $customization->logo_path) }}" 
                              alt="{{ tenant('name') }}" 
@@ -49,7 +58,8 @@
             </div>
 
             @if($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    Database not initialized. Please contact admin.
                     @foreach($errors->all() as $error)
                         <p>{{ $error }}</p>
                     @endforeach

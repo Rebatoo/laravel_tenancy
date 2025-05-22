@@ -16,29 +16,29 @@ class TenantRegistrationController extends Controller
 
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:tenants,email',
-            'domain_name' => 'required|string|max:255|unique:domains,domain',
+            'email' => 'required|email|unique:tenants,email',
+            'domain_name' => 'required|string|unique:domains,domain',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Store the domain name in the tenant data for later use
-        $validatedData['temp_domain'] = $validatedData['domain_name'];
-        unset($validatedData['domain_name']); // Remove it from direct tenant creation
-
-        // Create the tenant with pending status only
+        // Create tenant with domain
         $tenant = Tenant::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => $validatedData['password'],
-            'is_active' => false,
-            'is_premium' => false,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'is_active' => false, // Admin must approve
             'verification_status' => 'pending',
-            'temp_domain' => $validatedData['temp_domain'], // Store temporarily
+            'temp_domain' => $validated['domain_name'], // Store requested domain temporarily
+        ]);
+
+        // Create domain immediately (don't use temp_domain)
+        $tenant->domains()->create([
+            'domain' => $validated['domain_name'] . '.' . config('tenancy.central_domains')[0],
         ]);
 
         return redirect()->route('homepage')
-            ->with('success', 'Your tenant registration has been submitted and is pending admin verification. You will be notified once approved.');
+            ->with('success', 'Registration submitted for admin approval');
     }
 } 
