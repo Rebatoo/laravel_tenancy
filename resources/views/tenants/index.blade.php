@@ -62,13 +62,24 @@
                                     </td>
                                     <td class="py-4 px-6">
                                         @if($tenant->verification_status === 'pending')
-                                            <form action="{{ route('tenants.verify', $tenant) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
-                                                    Verify
-                                                </button>
-                                            </form>
+                                            <div class="flex space-x-2">
+                                                <form action="{{ route('tenants.verify', $tenant) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="verification_status" value="verified">
+                                                    <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                                                        Approve
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('tenants.verify', $tenant) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="verification_status" value="rejected">
+                                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                                        Reject
+                                                    </button>
+                                                </form>
+                                            </div>
                                         @else
                                             <span class="px-2 py-1 rounded {{ $tenant->verification_status === 'verified' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                                 {{ ucfirst($tenant->verification_status) }}

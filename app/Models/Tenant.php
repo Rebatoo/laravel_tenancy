@@ -18,7 +18,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'is_active',
         'is_premium',
         'verification_status',
-        'temp_domain'
+        'temp_domain',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'is_premium' => 'boolean',
     ];
 
     public static function getCustomColumns(): array
@@ -69,5 +74,17 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function downgradeToBasic(): void
     {
         $this->update(['is_premium' => false]);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($tenant) {
+            \Log::info('Tenant updating:', [
+                'id' => $tenant->id,
+                'changes' => $tenant->getDirty(),
+            ]);
+        });
     }
 }
