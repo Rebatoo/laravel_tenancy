@@ -44,7 +44,22 @@
                     </h2>
                 @endif
                 <p class="mt-2 text-center text-sm text-gray-600">
-                    Tenant Portal Login
+              
+
+                    <br>
+                    tenant landlord manager: 
+                    <br>
+                    email: laundry@gmail.com
+                    <br>
+                    password: password
+                    <br>
+                    <br>
+                    worker: 
+                    <br>
+                    email: ivan@gmail.com
+                    <br>
+                    password: password
+
                 </p>
             </div>
 
